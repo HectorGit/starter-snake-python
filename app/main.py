@@ -3,6 +3,7 @@ import os
 import random
 import bottle
 
+
 from api import ping_response, start_response, move_response, end_response
 
 @bottle.route('/')
@@ -28,11 +29,17 @@ def ping():
     A keep-alive endpoint used to prevent cloud application platforms,
     such as Heroku, from sleeping the application instance.
     """
+
+
     return ping_response()
 
 @bottle.post('/start')
 def start():
     data = bottle.request.json
+
+    """not sure if have to use dumps here """
+    """print(json.dumps(data['game']['id']))"""
+    
 
     """
     TODO: If you intend to have a stateful snake AI,
@@ -42,8 +49,26 @@ def start():
     print(json.dumps(data))
 
     color = "#00FF00"
+    headType = "bendr"
+    tailType = "pixel"
 
-    return start_response(color)
+    """start_response = {
+        "color" : "ff00ff",
+        "headType": "bendr",
+        "tailType": "pixel"
+    }"""
+
+    return start_response(color, headType, tailType)
+
+
+
+
+
+
+
+
+
+
 
 
 @bottle.post('/move')
@@ -56,10 +81,29 @@ def move():
     """
     print(json.dumps(data))
 
-    directions = ['up', 'down', 'left', 'right']
-    direction = random.choice(directions)
+    directions = ['up', 'down', 'left', 'right']    
 
+    dirction = random.choice(directions) # i think that's how it was initially
+ 
     return move_response(direction)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 @bottle.post('/end')
@@ -74,6 +118,7 @@ def end():
 
     return end_response()
 
+
 # Expose WSGI app (so gunicorn can find it)
 application = bottle.default_app()
 
@@ -84,3 +129,43 @@ if __name__ == '__main__':
         port=os.getenv('PORT', '8080'),
         debug=os.getenv('DEBUG', True)
     )
+
+
+"""
+# finds shortest path between 2 nodes of a graph using BFS
+def bfs_shortest_path(graph, start, goal):
+    # keep track of explored nodes
+    explored = []
+    # keep track of all the paths to be checked
+    pathsQueue = [[start]]
+ 
+    # return path if start is goal
+    if start == goal:
+        return "That was easy! Start = goal"
+ 
+    # keeps looping until all possible paths have been checked
+    while pathsQueue:
+        # pop the first path from the pathsQueue
+        path = pathsQueue.pop(0)
+        # get the last node from the path
+        node = path[-1]
+        if node not in explored:
+            neighbours = graph[node]
+            # go through all neighbour nodes, construct a new path and
+            # push it into the pathsQueue
+            for neighbour in neighbours:
+                new_path = list(path)
+                new_path.append(neighbour)
+                pathsQueue.append(new_path)
+                # return path if neighbour is goal
+                if neighbour == goal:
+                    return new_path
+ 
+            # mark node as explored
+            explored.append(node)
+ 
+    # in case there's no path between the 2 nodes
+    return "So sorry, but a connecting path doesn't exist :("
+ 
+bfs_shortest_path(graph, 'G', 'D')  # returns ['G', 'C', 'A', 'B', 'D']
+"""

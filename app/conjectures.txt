@@ -1,0 +1,352 @@
+import json
+import os
+import random
+import bottle
+
+
+"""
+the same data is always sent
+
+the game id
+
+the turn number
+
+the board, which contains 
+         the height and width of the board (always a square?)
+         food coordinates
+         snake coordinates
+
+for example :          
+    "food": [{
+      "x": 1,                    (yes)
+      "y": 3                     (yes)
+    }],
+
+and :
+    "snakes": [{
+      "id": "snake-id-string",   (dont care)
+      "name": "Sneky Snek",      (dont care)
+      "health": 100,             (dont care)
+      "body": [{
+        "x": 1,                  (yes)
+        "y": 3                   (yes)
+    }]
+
+rules = avoid other snakes at all costs - if a snake is close, avoid
+move opposite direction
+
+collect food - move towards food, but alwaystake into account the positions
+of other snakes.
+
+"""
+
+from api import ping_response, start_response, move_response, end_response
+
+@bottle.route('/')
+def index():
+    return '''
+    Battlesnake documentation can be found at
+       <a href="https://docs.battlesnake.io">https://docs.battlesnake.io</a>.
+    '''
+
+@bottle.route('/static/<path:path>')
+def static(path):
+    """
+    Given a path, return the static file located relative
+    to the static folder.
+
+    This can be used to return the snake head URL in an API response.
+    """
+    return bottle.static_file(path, root='static/')
+
+@bottle.post('/ping')
+def ping():
+    """
+    A keep-alive endpoint used to prevent cloud application platforms,
+    such as Heroku, from sleeping the application instance.
+    """
+
+
+    return ping_response()
+
+@bottle.post('/start')
+def start():
+    data = bottle.request.json
+
+    """not sure if have to use dumps here """
+    """print(json.dumps(data['game']['id']))"""
+    
+
+    """
+    TODO: If you intend to have a stateful snake AI,
+            initialize your snake state here using the
+            request's data if necessary.
+    """
+    print(json.dumps(data))
+
+    color = "#00FF00"
+    headType = "bendr"
+    tailType = "pixel"
+
+    """start_response = {
+        "color" : "ff00ff",
+        "headType": "bendr",
+        "tailType": "pixel"
+    }"""
+
+    return start_response(color, headType, tailType)
+
+
+@bottle.post('/move')
+def move():
+    data = bottle.request.json
+
+    """
+    TODO: Using the data from the endpoint request object, your
+            snake AI must choose a direction to move in.
+    """
+    print(json.dumps(data))
+
+    directions = ['up', 'down', 'left', 'right']
+
+
+    """
+    look into some algoritms, e.g. BFS?
+
+    bfs generates a data structure / tree
+    that searches all possible moves, 
+    and returns all the branches.
+    e.g. it is suboptimal, because 
+    you can't ""see ahead in time""
+    but ... you could look ahead a certain amount
+    of moves ... and then move
+
+    we have - the size of the board (dont go outside it!)
+    - the coordinates of food for this turn (*may* change in various situations)
+    we have - the coordinates of the snakes - (*will* change by next turn)
+
+    for snek in snakes
+    for food in food
+
+    """
+   
+    """direction = random.choice(directions)"""
+            
+"""
+
+
+
+"""
+
+    
+
+    return move_response(direction)
+
+
+@bottle.post('/end')
+def end():
+    data = bottle.request.json
+
+    """
+    TODO: If your snake AI was stateful,
+        clean up any stateful objects here.
+    """
+    print(json.dumps(data))
+
+    return end_response()
+
+"""
+is start is our current x y coordinates ?
+then we will visit all the nearest 'squares'/'coordinates'
+we should somehow keep track of what we find in these coordinates
+is there a snake at these coordinates?
+is there food at these coordinates?
+
+then possibly we should try to find from the explored, 
+what is the food that is the closest - 
+then move in a direction that brings us closer to that
+unless it puts us at risk of crashing with another snake
+
+
+OR is it a food?
+if its a food , we just pick one from the array of foods.
+linearly, we just subract our x y coords from each of the foods
+then the closest one becomes our target.
+we can use bfs from there, and 
+
+probably we can access the snakes from the board and the food from the board
+
+for snake in snakes
+for food in food
+
+
+
+
+
+STEP 1 :
+find my snake's distance from all the foods
+choose the nearest food
+(sort them from lowest to highest)
+
+
+alternatively - do BFS until food is found. (e.g modify):           while queue && ! food_found_yet
+
+and also have as a condition that (e.g. modify)                     if x y  not in explored 
+                                                                       if !snake at x y (e.g. discarding moving this way bc a snake is close...)
+                                                                       do the whole appending and stuff
+
+
+STEP 2 :
+
+
+
+
+"""
+
+""" 
+
+given/found BFS
+
+def bfs(board, width, height, start) 
+
+explored = [] 
+
+queue = [start]
+
+
+while queue:
+    node  = queue.pop(0)
+    if node not in explored:
+        explored.append(node)
+        neighbours = graph[node]
+
+        for neighbour in neighbours:
+            queue.append(neighbour)
+
+return explored
+
+""" 
+
+
+"""
+
+when we have the explored back - 
+we choose to move in the direction which brings us closer to the food
+(except if a snake is in the way).
+
+"""
+
+
+# Expose WSGI app (so gunicorn can find it)
+application = bottle.default_app()
+
+if __name__ == '__main__':
+    bottle.run(
+        application,
+        host=os.getenv('IP', '0.0.0.0'),
+        port=os.getenv('PORT', '8080'),
+        debug=os.getenv('DEBUG', True)
+    )
+
+
+    """
+
+what's weird about this is that
+we are not assigning a distance to things
+but i guess we dont want to - we just want 
+to use it to find the nearest food 
+but how does that help us choose a move NOW?
+
+from collections import deque
+
+queue = deque([my_X,my_Y])
+
+use node = queue.popleft()
+
+
+    modified BFS
+
+def bfs(board, width, height, my_X, my_Y) 
+
+explored = [] 
+
+queue = [[my_X, my_Y]]
+
+
+while queue:
+    node = queue.pop(0)
+    if node not in explored:
+        explored.append(node)
+
+                           UP                     DOWN                   LEFT                RIGHT
+        neighbours = [node[0],node[1]+1] , [node[0], node[1]-1], [node[0]-1,node[1]],[node[0]+1,node[0]]
+                           should diagonals be counted as neighbours? i think this is probs fine.
+
+        for neighbour in neighbours:
+            queue.append(neighbour)
+
+return explored
+
+
+
+    """
+
+
+"""
+
+https://pythoninwonderland.wordpress.com/2017/03/18/how-to-implement-breadth-first-search-in-python/
+
+another proposition
+
+a) find by simple subraction,
+the closest food. make it the goal.
+
+b) implement bfs similar to above BUT
+that can return the shortest path.
+between my current position 
+and the closest food.
+
+(problem:what todo if path is non existent?)
+
+
+# finds shortest path between 2 nodes of a graph using BFS
+def bfs_shortest_path(graph, start, goal):
+    # keep track of explored nodes
+    explored = []
+    # keep track of all the paths to be checked
+    queue = [[start]]
+ 
+    # return path if start is goal
+    if start == goal:
+        return "That was easy! Start = goal"
+ 
+    # keeps looping until all possible paths have been checked
+    while queue:
+        # pop the first path from the queue
+        path = queue.pop(0)
+        # get the last node from the path
+        node = path[-1]
+        if node not in explored:
+            neighbours = graph[node]
+            # go through all neighbour nodes, construct a new path and
+            # push it into the queue
+            for neighbour in neighbours:
+                new_path = list(path)
+                new_path.append(neighbour)
+                queue.append(new_path)
+                # return path if neighbour is goal
+                if neighbour == goal:
+                    return new_path
+ 
+            # mark node as explored
+            explored.append(node)
+ 
+    # in case there's no path between the 2 nodes
+    return "So sorry, but a connecting path doesn't exist :("
+ 
+bfs_shortest_path(graph, 'G', 'D')  # returns ['G', 'C', 'A', 'B', 'D']
+
+Co
+
+
+"""
