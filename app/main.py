@@ -168,13 +168,13 @@ def move():
     # here possibly add a way to fix that 
     # you crash into walls
 
-    if y_diff>0 and firstMove['y'] < height and firstMove ['y'] > 0 : 
+    if y_diff>0 and firstMove['y'] < height-1 and firstMove ['y'] > 0 : 
         direction = 'up'
-    if y_diff<0 and firstMove['y'] < height and firstMove ['y'] > 0: 
+    if y_diff<0 and firstMove['y'] < height-1 and firstMove ['y'] > 0: 
         direction = 'down'
-    if x_diff>0 and firstMove['x'] < width and firstMove ['x'] > 0: 
+    if x_diff>0 and firstMove['x'] < width-1 and firstMove ['x'] > 0: 
         direction = 'left'
-    if x_diff<0 and firstMove['x'] < width and firstMove ['x'] > 0: 
+    if x_diff<0 and firstMove['x'] < width-1 and firstMove ['x'] > 0: 
         direction = 'right'
 
     return move_response(direction)
