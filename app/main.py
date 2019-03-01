@@ -88,11 +88,11 @@ def move():
 
     snakesPositions = []
     for snake in data['board']['snakes']:
-        snakesPositions.append(snake['body'])
+        snakesPositions.append(snake['body'
+    #print(snakesPositions)
+])
 
     #print("\n snake positions")
-    #print(snakesPositions)
-
 
     start = data['you']['body'][0] # should be {"x":n1, "y":n2}
 
@@ -169,14 +169,13 @@ def move():
     # you crash into walls
 
     if y_diff>0 and firstMove['y'] < height and firstMove ['y'] > 0 : 
-        direction = 'right'
-    if y_diff<0 and firstMove['y'] < height and firstMove ['y'] > 0: 
-        direction = 'left'
-    if x_diff>0 and firstMove['x'] < width and firstMove ['x'] > 0: 
         direction = 'up'
-    if x_diff<0 and firstMove['x'] < width and firstMove ['x'] > 0: 
+    if y_diff<0 and firstMove['y'] < height and firstMove ['y'] > 0: 
         direction = 'down'
-
+    if x_diff>0 and firstMove['x'] < width and firstMove ['x'] > 0: 
+        direction = 'left'
+    if x_diff<0 and firstMove['x'] < width and firstMove ['x'] > 0: 
+        direction = 'right'
 
     return move_response(direction)
 
