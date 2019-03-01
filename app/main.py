@@ -49,8 +49,8 @@ def start():
     print(json.dumps(data))
 
     color = "#00FF00"
-    headType = "bendr"
-    tailType = "pixel"
+    #headType = "bendr"
+    #tailType = "pixel"
 
     """start_response = {
         "color" : "ff00ff",
@@ -58,7 +58,7 @@ def start():
         "tailType": "pixel"
     }"""
 
-    return start_response(color, headType, tailType)
+    return start_response(color)#, headType, tailType)
 
 
 
