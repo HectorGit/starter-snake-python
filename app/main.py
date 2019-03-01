@@ -62,15 +62,6 @@ def start():
 
 
 
-
-
-
-
-
-
-
-
-
 @bottle.post('/move')
 def move():
     data = bottle.request.json
@@ -79,31 +70,111 @@ def move():
     TODO: Using the data from the endpoint request object, your
             snake AI must choose a direction to move in.
     """
-    print(json.dumps(data))
+    #print(json.dumps(data))
 
+    #directions = ['up', 'down', 'left', 'right']    
+
+    #dirction = random.choice(directions) # i think that's how it was initially
+ 
     directions = ['up', 'down', 'left', 'right']    
 
-    dirction = random.choice(directions) # i think that's how it was initially
+    height = data['board']['height']
+
+   # print("boardHeight %d", height)
+
+    width = data['board']['width']
+
+    #print("boardWidth %d",width)
+
+    snakesPositions = []
+    for snake in data['board']['snakes']:
+        snakesPositions.append(snake['body'])
+
+    #print("\n snake positions")
+    #print(snakesPositions)
+
+
+    start = data['you']['body'][0] # should be {"x":n1, "y":n2}
+
+    #print('printing start: %s ', start)
+
+    explored = []
+
+    pathsQueue = [[start]]
  
+    foodFound = False
+
+    while pathsQueue and not foodFound:
+
+        path = pathsQueue.pop(0)
+        node = path[-1]
+
+        if node not in explored:
+
+            value_x = node['x']
+            value_y = node['y']
+
+            up_neighbour = {"x":value_x,"y":value_y+1}
+            down_neighbour = {"x":value_x,"y":value_y-1}
+            left_neighbour = {"x":value_x-1,"y":value_y}
+            right_neighbour = {"x":value_x+1,"y":value_y}
+
+            #print("printing node and neighbours")
+            #print(node)
+            #print(up_neighbour)
+            #print(down_neighbour)
+            #print(left_neighbour)
+            #print(right_neighbour)
+
+            neighbours = []
+            neighbours.append(up_neighbour)
+            neighbours.append(down_neighbour)
+            neighbours.append(left_neighbour)
+            neighbours.append(right_neighbour)   
+
+            #print("printing neighbours")
+            #print(neighbours)
+           
+            for neighbour in neighbours:
+                if neighbour['x'] >= width or neighbour['y'] >= height:
+                    neighbours.remove(neighbour) 
+                    
+            for neighbour in neighbours:
+                if neighbour in snakesPositions: 
+                    neighbours.remove(neighbour)
+
+            #print("printing neighbours post filtering")
+            #print(neighbours)
+
+            for neighbour in neighbours:
+                new_path = list(path)
+                new_path.append(neighbour)
+                pathsQueue.append(new_path)
+             
+                if neighbour in data['board']['food']:
+                    foodFound = True 
+
+                explored.append(node)
+
+    path = pathsQueue.pop(-1)
+    firstMove = path.pop(0)
+
+    x_diff = firstMove['x']-start['x']
+    y_diff = firstMove['y']-start['y']
+
+    direction = ""
+
+    if y_diff>0 : 
+        direction = 'right'
+    if y_diff<0 : 
+        direction = 'left'
+    if x_diff>0 : 
+        direction = 'up'
+    if x_diff<0 : 
+        direction = 'down'
+
+
     return move_response(direction)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 @bottle.post('/end')

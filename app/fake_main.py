@@ -116,7 +116,7 @@ def move():
 
     # MOD : check until a food has been found, and then return that path. 
     # NOT THIS : keeps looping until all possible paths have been checked
-    while pathsQueue && !foodFound :
+    while pathsQueue and not foodFound :
 
         # pop the first path from the pathsQueue
         path = pathsQueue.pop(0)
@@ -149,7 +149,7 @@ def move():
             #TRIED TO SOLVE PROBLEM AND REMOVE 
             #COORDINATES THAT ARE OFF THE BOARD
             for neighbour in neighbours:
-                if neighbour['x'] >= width || neighbour['y'] >= height:
+                if neighbour['x'] >= width or neighbour['y'] >= height:
                     neighbours.remove(neighbour) 
                     
             # AVOIDING SNAKES : CHECK if any of the neighbours
