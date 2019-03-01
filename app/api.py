@@ -21,8 +21,8 @@ def start_response(color, headType, tailType):
         },
         body=json.dumps({
             "color": color
-            "headType": headType
-            "tailType": tailType
+            #"headType": headType
+            #"tailType": tailType
         })
     )
 
