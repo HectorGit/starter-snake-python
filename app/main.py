@@ -206,13 +206,13 @@ def move():
     #reversed the y conditions
     #given board orientation
 
-    if y_diff < 0 and not firstMove['y']==start['y']:#and firstMove['y'] < height-1 and firstMove ['y'] > 0: 
+    if y_diff < 0: #and not firstMove['y']==start['y']:#and firstMove['y'] < height-1 and firstMove ['y'] > 0: 
         direction = 'up'
-    elif y_diff > 0 and not firstMove['y']==start['y']:# and firstMove['y'] < height-1 and firstMove ['y'] > 0: 
+    elif y_diff > 0: #and not firstMove['y']==start['y']:# and firstMove['y'] < height-1 and firstMove ['y'] > 0: 
         direction = 'down'
-    elif x_diff > 0 and not firstMove['x']==start['x']:# and firstMove['x'] < width-1 and firstMove ['x'] > 0: 
+    elif x_diff > 0: #and not firstMove['x']==start['x']:# and firstMove['x'] < width-1 and firstMove ['x'] > 0: 
         direction = 'left'
-    elif x_diff < 0 and not firstMove['x']==start['x']:# and firstMove['x'] < width-1 and firstMove ['x'] > 0: 
+    elif x_diff < 0: #and not firstMove['x']==start['x']:# and firstMove['x'] < width-1 and firstMove ['x'] > 0: 
         direction = 'right'
 
     return move_response(direction)
