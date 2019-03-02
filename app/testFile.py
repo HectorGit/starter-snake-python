@@ -45,7 +45,7 @@ def move(data):
 
 	iterations = 0
 
-	while pathsQueue and not foodFound and iterations < 20:
+	while pathsQueue and not foodFound and iterations < 5:
 
 		iterations = iterations+1
 
