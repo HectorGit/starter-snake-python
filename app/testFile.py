@@ -4,7 +4,7 @@
 def main():
 
 	#data = {}
-	data = {"game": {"id": "game-id-string"},"turn": 1,"board": {"height": 11,"width": 11, "food": [{"x": 1,"y": 4}],"snakes": [{"id": "snake-id-string","name": "Sneky Snek","health": 100,"body": [{"x": 5,"y": 5}]}]},"you": {"id": "snake-id-string","name": "Sneky Snek","health": 100,"body": [{"x": 1,"y": 3}]}}
+	data = {"game": {"id": "game-id-string"},"turn": 1,"board": {"height": 11,"width": 11, "food": [{"x": 7,"y": 0}],"snakes": [{"id": "snake-id-string","name": "Sneky Snek","health": 100,"body": [{"x": 5,"y": 5}]}]},"you": {"id": "snake-id-string","name": "Sneky Snek","health": 100,"body": [{"x": 1,"y": 3}]}}
 
 	move(data)
 
@@ -66,10 +66,14 @@ def move(data):
 			#print(right_neighbour)
 
 			neighbours = []
-			neighbours.append(up_neighbour)
-			neighbours.append(down_neighbour)
-			neighbours.append(left_neighbour)
-			neighbours.append(right_neighbour)   
+			if up_neighbour not in explored:
+				neighbours.append(up_neighbour)
+			if down_neighbour not in explored:	
+				neighbours.append(down_neighbour)
+			if left_neighbour not in explored:
+				neighbours.append(left_neighbour)
+			if right_neighbour not in explored:
+				neighbours.append(right_neighbour)   
 
 			print("printing neighbours")
 			print(neighbours)
@@ -97,7 +101,15 @@ def move(data):
 
 				explored.append(node)
 
+
 	path = pathsQueue.pop(0)
+
+	print("\n start")
+	print(start)
+
+	print("\n path:")
+	print(path)
+
 	firstMove = path.pop(1)
 	print("firstMove")
 	print(firstMove)
@@ -110,7 +122,7 @@ def move(data):
 
 	direction = "none_selected"
 
-	if y_diff>0 : 
+	"""if y_diff>0 : 
 		direction = 'up'
 	elif y_diff<0 : 
 		direction = 'down'
@@ -118,15 +130,21 @@ def move(data):
 		direction = 'left'
 	elif x_diff<0 : 
 		direction = 'right'
+	"""
 
+	if y_diff>0 and firstMove['y'] < height-1 and firstMove ['y'] > 0: 
+		direction = 'up'
+	elif y_diff<0 and firstMove['y'] < height-1 and firstMove ['y'] > 0: 
+		direction = 'down'
+	elif x_diff>0 and firstMove['x'] < width-1 and firstMove ['x'] > 0: 
+		direction = 'left'
+	elif x_diff<0 and firstMove['x'] < width-1 and firstMove ['x'] > 0: 
+		direction = 'right'
 
-
- 	print("\n direction picked:")
+	print("\n direction picked:")
 	print(direction)
-	print("\n path:")
-	print(path)
-	print("\n start")
-	print(start)
+
+ 
 
 if __name__== "__main__":
 
