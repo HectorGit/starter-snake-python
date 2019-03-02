@@ -43,7 +43,11 @@ def move(data):
  
 	foodFound = False
 
-	while pathsQueue and not foodFound:
+	iterations = 0
+
+	while pathsQueue and not foodFound and iterations < 10:
+
+		iterations = iterations+1
 
 		path = pathsQueue.pop(0)
 		node = path[-1]
@@ -53,8 +57,9 @@ def move(data):
 			value_x = node['x']
 			value_y = node['y']
 
-			up_neighbour = {"x":value_x,"y":value_y+1}
-			down_neighbour = {"x":value_x,"y":value_y-1}
+			#changed these because of board orientation
+			up_neighbour = {"x":value_x,"y":value_y-1}
+			down_neighbour = {"x":value_x,"y":value_y+1}
 			left_neighbour = {"x":value_x-1,"y":value_y}
 			right_neighbour = {"x":value_x+1,"y":value_y}
 
@@ -79,9 +84,14 @@ def move(data):
 			print(neighbours)
 		   
 			for neighbour in neighbours:
-				if neighbour['x'] >= width or neighbour['y'] >= height:
+				#exceeds x coordinates?
+				if neighbour['x'] >= width-1 or neighbour['x'] < 0:
 					neighbours.remove(neighbour) 
-		            
+
+				#exceeds y coordinates?
+				if neighbour['y'] >= height-1 or neighbour['y'] <0:
+					neighbours.remove(neighbour) 
+ 
 			for neighbour in neighbours:
 				if neighbour in snakesPositions: 
 					neighbours.remove(neighbour)
@@ -132,13 +142,16 @@ def move(data):
 		direction = 'right'
 	"""
 
-	if y_diff>0 and firstMove['y'] < height-1 and firstMove ['y'] > 0: 
+	#reversed the y conditions
+	#given board orientation
+
+	if y_diff < 0:#and firstMove['y'] < height-1 and firstMove ['y'] > 0: 
 		direction = 'up'
-	elif y_diff<0 and firstMove['y'] < height-1 and firstMove ['y'] > 0: 
+	elif y_diff > 0:# and firstMove['y'] < height-1 and firstMove ['y'] > 0: 
 		direction = 'down'
-	elif x_diff>0 and firstMove['x'] < width-1 and firstMove ['x'] > 0: 
+	elif x_diff > 0:# and firstMove['x'] < width-1 and firstMove ['x'] > 0: 
 		direction = 'left'
-	elif x_diff<0 and firstMove['x'] < width-1 and firstMove ['x'] > 0: 
+	elif x_diff < 0:# and firstMove['x'] < width-1 and firstMove ['x'] > 0: 
 		direction = 'right'
 
 	print("\n direction picked:")

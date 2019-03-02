@@ -80,22 +80,23 @@ def move():
 
     height = data['board']['height']
 
-   # print("boardHeight %d", height)
+    print("boardHeight %d", height)
 
     width = data['board']['width']
 
-    #print("boardWidth %d",width)
+    print("boardWidth %d",width)
 
     snakesPositions = []
     for snake in data['board']['snakes']:
         snakesPositions.append(snake['body'])
-    #print(snakesPositions)])
 
-    #print("\n snake positions")
+    print("\n snake positions")
+    print(snakesPositions)
+
 
     start = data['you']['body'][0] # should be {"x":n1, "y":n2}
 
-    #print('printing start: %s ', start)
+    print('printing start: %s ', start)
 
     explored = []
 
@@ -103,7 +104,11 @@ def move():
  
     foodFound = False
 
-    while pathsQueue and not foodFound:
+    iterations = 0
+
+    while pathsQueue and not foodFound and iterations < 10:
+
+        iterations = iterations+1
 
         path = pathsQueue.pop(0)
         node = path[-1]
@@ -113,8 +118,9 @@ def move():
             value_x = node['x']
             value_y = node['y']
 
-            up_neighbour = {"x":value_x,"y":value_y+1}
-            down_neighbour = {"x":value_x,"y":value_y-1}
+            #changed these because of board orientation
+            up_neighbour = {"x":value_x,"y":value_y-1}
+            down_neighbour = {"x":value_x,"y":value_y+1}
             left_neighbour = {"x":value_x-1,"y":value_y}
             right_neighbour = {"x":value_x+1,"y":value_y}
 
@@ -126,28 +132,33 @@ def move():
             #print(right_neighbour)
 
             neighbours = []
-            neighbours.append(up_neighbour)
-            neighbours.append(down_neighbour)
-            neighbours.append(left_neighbour)
-            neighbours.append(right_neighbour)   
+            if up_neighbour not in explored:
+                neighbours.append(up_neighbour)
+            if down_neighbour not in explored:  
+                neighbours.append(down_neighbour)
+            if left_neighbour not in explored:
+                neighbours.append(left_neighbour)
+            if right_neighbour not in explored:
+                neighbours.append(right_neighbour)   
 
-            #print("printing neighbours")
-            #print(neighbours)
+            print("printing neighbours")
+            print(neighbours)
            
-           #wall protection
             for neighbour in neighbours:
-                #added a minus 1 here.
-                if neighbour['x'] >= width-1 or neighbour['y'] >= height-1:
+                #exceeds x coordinates?
+                if neighbour['x'] >= width-1 or neighbour['x'] < 0:
                     neighbours.remove(neighbour) 
-                if neighbour['x'] < 0 or neighbour['y'] < 0:
+
+                #exceeds y coordinates?
+                if neighbour['y'] >= height-1 or neighbour['y'] <0:
                     neighbours.remove(neighbour) 
-                    
+ 
             for neighbour in neighbours:
                 if neighbour in snakesPositions: 
                     neighbours.remove(neighbour)
 
-            #print("printing neighbours post filtering")
-            #print(neighbours)
+            print("printing neighbours post filtering")
+            print(neighbours)
 
             for neighbour in neighbours:
                 new_path = list(path)
@@ -156,25 +167,52 @@ def move():
              
                 if neighbour in data['board']['food']:
                     foodFound = True 
+                    print("\n foodFound at:")
+                    print(neighbour)
 
                 explored.append(node)
 
-    path = pathsQueue.pop(0)#(-1)
+
+    path = pathsQueue.pop(0)
+
+    print("\n start")
+    print(start)
+
+    print("\n path:")
+    print(path)
+
     firstMove = path.pop(1)
+    print("firstMove")
+    print(firstMove)
 
     x_diff = firstMove['x']-start['x']
     y_diff = firstMove['y']-start['y']
 
-    # here possibly add a way to fix that 
-    # you crash into walls
+    print("x_diff %d", x_diff)
+    print("y_diff %d", y_diff)
 
-    if y_diff>0: #and firstMove['y'] < height-1 and firstMove ['y'] > 0 : 
+    direction = "none_selected"
+
+    """if y_diff>0 : 
         direction = 'up'
-    elif y_diff<0: #and firstMove['y'] < height-1 and firstMove ['y'] > 0: 
+    elif y_diff<0 : 
         direction = 'down'
-    elif x_diff>0: #and firstMove['x'] < width-1 and firstMove ['x'] > 0: 
+    elif x_diff>0 : 
         direction = 'left'
-    elif x_diff<0: #and firstMove['x'] < width-1 and firstMove ['x'] > 0: 
+    elif x_diff<0 : 
+        direction = 'right'
+    """
+
+    #reversed the y conditions
+    #given board orientation
+
+    if y_diff < 0:#and firstMove['y'] < height-1 and firstMove ['y'] > 0: 
+        direction = 'up'
+    elif y_diff > 0:# and firstMove['y'] < height-1 and firstMove ['y'] > 0: 
+        direction = 'down'
+    elif x_diff > 0:# and firstMove['x'] < width-1 and firstMove ['x'] > 0: 
+        direction = 'left'
+    elif x_diff < 0:# and firstMove['x'] < width-1 and firstMove ['x'] > 0: 
         direction = 'right'
 
     return move_response(direction)
