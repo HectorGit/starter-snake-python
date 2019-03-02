@@ -156,25 +156,22 @@ def move():
 
                 explored.append(node)
 
-    path = pathsQueue.pop(-1)
-    firstMove = path.pop(0)
+    path = pathsQueue.pop(0)#(-1)
+    firstMove = path.pop(1)
 
     x_diff = firstMove['x']-start['x']
     y_diff = firstMove['y']-start['y']
-
-    direction = ""
-
 
     # here possibly add a way to fix that 
     # you crash into walls
 
     if y_diff>0 and firstMove['y'] < height-1 and firstMove ['y'] > 0 : 
         direction = 'up'
-    else if y_diff<0 and firstMove['y'] < height-1 and firstMove ['y'] > 0: 
+    elif y_diff<0 and firstMove['y'] < height-1 and firstMove ['y'] > 0: 
         direction = 'down'
-    else if x_diff>0 and firstMove['x'] < width-1 and firstMove ['x'] > 0: 
+    elif x_diff>0 and firstMove['x'] < width-1 and firstMove ['x'] > 0: 
         direction = 'left'
-    else if x_diff<0 and firstMove['x'] < width-1 and firstMove ['x'] > 0: 
+    elif x_diff<0 and firstMove['x'] < width-1 and firstMove ['x'] > 0: 
         direction = 'right'
 
     return move_response(direction)

@@ -4,7 +4,7 @@
 def main():
 
 	#data = {}
-	data = {"game": {"id": "game-id-string"},"turn": 1,"board": {"height": 11,"width": 11, "food": [{"x": 1,"y": 3}],"snakes": [{"id": "snake-id-string","name": "Sneky Snek","health": 100,"body": [{"x": 5,"y": 5}]}]},"you": {"id": "snake-id-string","name": "Sneky Snek","health": 100,"body": [{"x": 1,"y": 3}]}}
+	data = {"game": {"id": "game-id-string"},"turn": 1,"board": {"height": 11,"width": 11, "food": [{"x": 1,"y": 4}],"snakes": [{"id": "snake-id-string","name": "Sneky Snek","health": 100,"body": [{"x": 5,"y": 5}]}]},"you": {"id": "snake-id-string","name": "Sneky Snek","health": 100,"body": [{"x": 1,"y": 3}]}}
 
 	move(data)
 
@@ -92,28 +92,41 @@ def move(data):
 			 
 			    if neighbour in data['board']['food']:
 			        foodFound = True 
+			        print("\n foodFound at:")
+			        print(neighbour)
 
 				explored.append(node)
 
-	path = pathsQueue.pop(-1)
-	firstMove = path.pop(0)
+	path = pathsQueue.pop(0)
+	firstMove = path.pop(1)
+	print("firstMove")
+	print(firstMove)
 
 	x_diff = firstMove['x']-start['x']
 	y_diff = firstMove['y']-start['y']
 
-	direction = ""
+	print("x_diff %d", x_diff)
+	print("y_diff %d", y_diff)
+
+	direction = "none_selected"
 
 	if y_diff>0 : 
-		direction = 'right'
-	if y_diff<0 : 
-		direction = 'left'
-	if x_diff>0 : 
 		direction = 'up'
-	if x_diff<0 : 
+	elif y_diff<0 : 
 		direction = 'down'
+	elif x_diff>0 : 
+		direction = 'left'
+	elif x_diff<0 : 
+		direction = 'right'
 
- 
+
+
+ 	print("\n direction picked:")
 	print(direction)
+	print("\n path:")
+	print(path)
+	print("\n start")
+	print(start)
 
 if __name__== "__main__":
 
