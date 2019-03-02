@@ -88,9 +88,8 @@ def move():
 
     snakesPositions = []
     for snake in data['board']['snakes']:
-        snakesPositions.append(snake['body'
-    #print(snakesPositions)
-])
+        snakesPositions.append(snake['body'])
+    #print(snakesPositions)])
 
     #print("\n snake positions")
 
@@ -135,8 +134,12 @@ def move():
             #print("printing neighbours")
             #print(neighbours)
            
+           #wall protection
             for neighbour in neighbours:
-                if neighbour['x'] >= width or neighbour['y'] >= height:
+                #added a minus 1 here.
+                if neighbour['x'] >= width-1 or neighbour['y'] >= height-1:
+                    neighbours.remove(neighbour) 
+                if neighbour['x'] < 0 or neighbour['y'] < 0:
                     neighbours.remove(neighbour) 
                     
             for neighbour in neighbours:
