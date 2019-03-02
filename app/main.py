@@ -106,7 +106,7 @@ def move():
 
     iterations = 0
 
-    while pathsQueue and not foodFound and iterations < 20:
+    while pathsQueue and not foodFound and iterations < 10:
 
         iterations = iterations+1
 
@@ -191,7 +191,7 @@ def move():
     print("x_diff %d", x_diff)
     print("y_diff %d", y_diff)
 
-    direction = "none_selected"
+    #direction = "none_selected"
 
     """if y_diff>0 : 
         direction = 'up'
@@ -214,6 +214,8 @@ def move():
         direction = 'left'
     elif x_diff < 0: #and not firstMove['x']==start['x']:# and firstMove['x'] < width-1 and firstMove ['x'] > 0: 
         direction = 'right'
+    else: #failure #fallback
+        direction = random.choice(directions)
 
     return move_response(direction)
 

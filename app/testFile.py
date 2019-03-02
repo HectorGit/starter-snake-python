@@ -45,7 +45,7 @@ def move(data):
 
 	iterations = 0
 
-	while pathsQueue and not foodFound and iterations < 5:
+	while pathsQueue and not foodFound and iterations < 10:
 
 		iterations = iterations+1
 
@@ -89,7 +89,7 @@ def move(data):
 					neighbours.remove(neighbour) 
 
 				#exceeds y coordinates?
-				if neighbour['y'] >= height-1 or neighbour['y'] <0:
+				if neighbour['y'] >= height-1 or neighbour['y'] < 0:
 					neighbours.remove(neighbour) 
  
 			for neighbour in neighbours:
